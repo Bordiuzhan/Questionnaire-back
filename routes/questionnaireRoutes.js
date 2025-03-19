@@ -16,8 +16,26 @@ router.post('/', async (req, res) => {
 
 // Get all questionnaires
 router.get('/', async (req, res) => {
-  const questionnaires = await Questionnaire.find();
-  res.json(questionnaires);
+  try {
+    const questionnaires = await Questionnaire.find();
+
+    // Додаємо кількість завершень для кожної анкети
+    const questionnairesWithCompletions = await Promise.all(
+      questionnaires.map(async (questionnaire) => {
+        const completions = await Response.countDocuments({
+          questionnaireId: questionnaire._id,
+        });
+        return {
+          ...questionnaire.toObject(),
+          completions, // Додаємо поле completions
+        };
+      })
+    );
+
+    res.json(questionnairesWithCompletions);
+  } catch (err) {
+    res.status(500).json({ error: 'Помилка при отриманні анкет' });
+  }
 });
 
 // Get a single questionnaire by ID

@@ -9,7 +9,7 @@ const responseSchema = new mongoose.Schema({
   answers: [
     {
       questionId: { type: mongoose.Schema.Types.ObjectId, required: true },
-      answer: mongoose.Schema.Types.Mixed, // Може бути рядок або масив (для multiple-choice)
+      answer: mongoose.Schema.Types.Mixed,
     },
   ],
   submittedAt: { type: Date, default: Date.now },
