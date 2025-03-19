@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const questionSchema = new mongoose.Schema({
   text: String,
-  type: String, // text, multiple-choice, checkbox, etc.
-  options: [String], // for multiple-choice or checkbox
+  type: String,
+  options: [String],
 });
 
 const questionnaireSchema = new mongoose.Schema({

@@ -1,5 +1,6 @@
 const express = require('express');
 const Questionnaire = require('../models/questionnaire');
+const Response = require('../models/response');
 
 const router = express.Router();
 
@@ -18,8 +19,6 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const questionnaires = await Questionnaire.find();
-
-    // Додаємо кількість завершень для кожної анкети
     const questionnairesWithCompletions = await Promise.all(
       questionnaires.map(async (questionnaire) => {
         const completions = await Response.countDocuments({
@@ -27,11 +26,10 @@ router.get('/', async (req, res) => {
         });
         return {
           ...questionnaire.toObject(),
-          completions, // Додаємо поле completions
+          completions,
         };
       })
     );
-
     res.json(questionnairesWithCompletions);
   } catch (err) {
     res.status(500).json({ error: 'Помилка при отриманні анкет' });
